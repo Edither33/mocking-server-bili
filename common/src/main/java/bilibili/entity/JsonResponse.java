@@ -1,4 +1,4 @@
-package bilibili.domain;
+package bilibili.entity;
 
 public class JsonResponse<T> {
 

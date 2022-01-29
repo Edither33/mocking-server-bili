@@ -1,6 +1,6 @@
 package bilibili.dao;
 
-import bilibili.domain.entity.User;
+import bilibili.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
@@ -10,4 +10,8 @@ public interface UserDao {
     User queryUserByPhone(String phone);
 
     Integer insertUser(User user);
+
+    Integer update(User user);
+
+    User queryUserByEmail(String email);
 }

@@ -1,7 +1,7 @@
 package bilibili.handler;
 
 
-import bilibili.domain.JsonResponse;
+import bilibili.entity.JsonResponse;
 import bilibili.exception.ConditionException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;

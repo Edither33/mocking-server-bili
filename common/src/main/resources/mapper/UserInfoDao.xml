@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="bilibili.dao.UserInfoDao">
 
-    <resultMap type="bilibili.domain.entity.UserInfo" id="TUserInfoMap">
+    <resultMap type="bilibili.entity.UserInfo" id="TUserInfoMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="userid" column="userId" jdbcType="INTEGER"/>
         <result property="nick" column="nick" jdbcType="VARCHAR"/>
@@ -20,6 +20,13 @@
           id, userId, nick, avatar, sign, gender, birth, createTime, updateTime
         from mock_bilibili.t_user_info
         where id = #{id}
+    </select>
+
+    <select id="queryByUserId" resultMap="TUserInfoMap">
+        select
+          id, userId, nick, avatar, sign, gender, birth, createTime, updateTime
+        from mock_bilibili.t_user_info
+        where userId = #{userId}
     </select>
 
     <!--查询指定行数据-->
@@ -76,9 +83,6 @@
     <update id="update">
         update mock_bilibili.t_user_info
         <set>
-            <if test="userid != null">
-                userId = #{userid},
-            </if>
             <if test="nick != null and nick != ''">
                 nick = #{nick},
             </if>
@@ -101,7 +105,7 @@
                 updateTime = #{updatetime},
             </if>
         </set>
-        where id = #{id}
+        where userId = #{userid}
     </update>
 
     <!--通过主键删除-->

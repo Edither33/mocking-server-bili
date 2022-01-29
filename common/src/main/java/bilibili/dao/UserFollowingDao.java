@@ -1,16 +1,16 @@
 package bilibili.dao;
 
-import bilibili.entity.UserInfo;
+import bilibili.entity.UserFollowing;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
- * 用户基本信息表(UserInfo)表数据库访问层
+ * 用户关注表(UserFollowing)表数据库访问层
  *
  * @author makejava
- * @since 2022-01-28 11:50:02
+ * @since 2022-01-29 14:04:28
  */
-public interface UserInfoDao {
+public interface UserFollowingDao {
 
     /**
      * 通过ID查询单条数据
@@ -18,9 +18,7 @@ public interface UserInfoDao {
      * @param id 主键
      * @return 实例对象
      */
-    UserInfo queryById(Long id);
-
-    UserInfo queryByUserId(Long id);
+    UserFollowing queryById(Long id);
 
     /**
      * 查询指定行数据
@@ -29,32 +27,32 @@ public interface UserInfoDao {
      * @param limit 查询条数
      * @return 对象列表
      */
-    List<UserInfo> queryAllByLimit(@Param("offset") int offset, @Param("limit") int limit);
+    List<UserFollowing> queryAllByLimit(@Param("offset") int offset, @Param("limit") int limit);
 
 
     /**
      * 通过实体作为筛选条件查询
      *
-     * @param UserInfo 实例对象
+     * @param UserFollowing 实例对象
      * @return 对象列表
      */
-    List<UserInfo> queryAll(UserInfo UserInfo);
+    List<UserFollowing> queryAll(UserFollowing UserFollowing);
 
     /**
      * 新增数据
      *
-     * @param UserInfo 实例对象
+     * @param UserFollowing 实例对象
      * @return 影响行数
      */
-    int insert(UserInfo UserInfo);
+    int insert(UserFollowing UserFollowing);
 
     /**
      * 修改数据
      *
-     * @param UserInfo 实例对象
+     * @param UserFollowing 实例对象
      * @return 影响行数
      */
-    int update(UserInfo UserInfo);
+    int update(UserFollowing UserFollowing);
 
     /**
      * 通过主键删除数据

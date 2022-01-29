@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="bilibili.dao.UserFollowingDao">
+
+    <resultMap type="bilibili.entity.UserFollowing" id="TUserFollowingMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userid" column="userId" jdbcType="INTEGER"/>
+        <result property="followingid" column="followingId" jdbcType="INTEGER"/>
+        <result property="groupid" column="groupId" jdbcType="INTEGER"/>
+        <result property="createtime" column="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TUserFollowingMap">
+        select
+          id, userId, followingId, groupId, createTime
+        from mock_bilibili.t_user_following
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TUserFollowingMap">
+        select
+          id, userId, followingId, groupId, createTime
+        from mock_bilibili.t_user_following
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TUserFollowingMap">
+        select
+          id, userId, followingId, groupId, createTime
+        from mock_bilibili.t_user_following
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="userid != null">
+                and userId = #{userid}
+            </if>
+            <if test="followingid != null">
+                and followingId = #{followingid}
+            </if>
+            <if test="groupid != null">
+                and groupId = #{groupid}
+            </if>
+            <if test="createtime != null">
+                and createTime = #{createtime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into mock_bilibili.t_user_following(userId, followingId, groupId, createTime)
+        values (#{userid}, #{followingid}, #{groupid}, #{createtime})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update mock_bilibili.t_user_following
+        <set>
+            <if test="userid != null">
+                userId = #{userid},
+            </if>
+            <if test="followingid != null">
+                followingId = #{followingid},
+            </if>
+            <if test="groupid != null">
+                groupId = #{groupid},
+            </if>
+            <if test="createtime != null">
+                createTime = #{createtime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from mock_bilibili.t_user_following where id = #{id}
+    </delete>
+
+</mapper>
