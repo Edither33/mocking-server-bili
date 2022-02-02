@@ -84,6 +84,7 @@
         from t_user_role ur
         left join t_auth_role ar
         on ar.id = ur.roleId
+        where ur.userId = #{userId}
     </select>
 
 </mapper>

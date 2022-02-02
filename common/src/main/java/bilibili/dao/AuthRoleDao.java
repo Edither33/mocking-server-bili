@@ -64,5 +64,5 @@ public interface AuthRoleDao {
      */
     int deleteById(Long id);
 
-    List<AuthRoleElementOperation> getRoleElementOperationsByRoleIds(Set<Long> roleIdList);
+    AuthRole getRoleByCodeId(String roleCode);
 }

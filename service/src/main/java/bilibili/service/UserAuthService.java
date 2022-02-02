@@ -1,5 +1,6 @@
 package bilibili.service;
 
+import bilibili.constant.UserRoleConstant;
 import bilibili.entity.UserAuthorities;
 import bilibili.entity.auth.AuthRole;
 import bilibili.entity.auth.AuthRoleElementOperation;
@@ -21,11 +22,28 @@ public class UserAuthService {
     @Autowired
     private AuthRoleService authRoleService;
 
+    /**
+     * 获取当前用户的权限
+     * @param userId 用户id
+     * @return 权限列表
+     */
     public UserAuthorities getUserAuthorities(Long userId) {
         List<UserRole> userRoleList = userRoleService.getUserRoleByUserId(userId);
         Set<Long> roleIdList = userRoleList.stream().map(UserRole::getRoleId).collect(Collectors.toSet());
         List<AuthRoleElementOperation> authRoleElementOperationList = authRoleService.getRoleElementOperationsByRoleIds(roleIdList);
         List<AuthRoleMenu> authRoleMenuList = authRoleService.getAuthRoleMenus(roleIdList);
         return new UserAuthorities(authRoleElementOperationList, authRoleMenuList);
+    }
+
+    /**
+     * 添加默认权限
+     * @param userId 用户id
+     */
+    public void addDefaultRoleToUser(Long userId) {
+        AuthRole authRole = authRoleService.getRoleByCodeId(UserRoleConstant.ROLE_LV0);
+        UserRole userRole = new UserRole();
+        userRole.setRoleId(authRole.getId());
+        userRole.setUserId(userId);
+        userRoleService.addDefaultRoleToUser(userRole);
     }
 }

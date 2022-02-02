@@ -1,5 +1,6 @@
 package bilibili.support;
 
+import bilibili.exception.ConditionException;
 import bilibili.util.TokenUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.jwt.JWT;
@@ -18,6 +19,10 @@ public class UserSupport {
         }
 
         JWT jwtInfo = TokenUtil.getJWTInfo(token);
+        if(TokenUtil.isExpire(token)) {
+            throw new ConditionException("555","登录过期");
+        }
+
         return Long.valueOf((String) jwtInfo.getPayload(TokenUtil.USERID));
     }
 }

@@ -4,6 +4,7 @@ import bilibili.constant.UserConstant;
 import bilibili.dao.UserDao;
 import bilibili.dao.UserInfoDao;
 import bilibili.entity.PageResult;
+import bilibili.entity.RefreshToken;
 import bilibili.entity.User;
 import bilibili.entity.UserInfo;
 import bilibili.exception.ConditionException;
@@ -13,12 +14,11 @@ import bilibili.util.TokenUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -28,6 +28,9 @@ public class UserService {
 
     @Resource
     private UserInfoDao userInfoDao;
+
+    @Autowired
+    private UserAuthService userAuthService;
 
     public void addUser(User user) {
         String phone = user.getPhone();
@@ -71,8 +74,8 @@ public class UserService {
         userInfo.setGender(UserConstant.GENDER_MALE);
         userInfo.setCreateTime(now);
         userInfoDao.insert(userInfo);
-
-
+        // 给新添加的用户授予默认权限
+        userAuthService.addDefaultRoleToUser(user.getId());
     }
 
     public User getUserByPhone(String phone) {
@@ -86,41 +89,7 @@ public class UserService {
     }
 
     public String login(User user) {
-        String phone = user.getPhone();
-        String email = user.getEmail();
-
-        boolean p = StrUtil.isBlankIfStr(phone);
-        boolean e = StrUtil.isBlankIfStr(email);
-        if(p && e) {
-            log.warn("账号不能为空");
-            throw new ConditionException("44300","账号不能为空");
-        }
-
-        String password = user.getPassword();
-        String decrypt;
-        try {
-            decrypt = RSAUtil.decrypt(password);
-        } catch (Exception e1) {
-            throw new ConditionException("44400", "密码解密失败");
-        }
-
-        User userByQuery = null ;
-        if(p) {
-            userByQuery = getUserByEmail(email);
-        }else if(e){
-            userByQuery = getUserByPhone(phone);
-        }
-        if (null == userByQuery) {
-            log.warn("33300", "用户不存在");
-            throw new ConditionException("33300", "用户不存在");
-        }
-
-        String salt = userByQuery.getSalt();
-        boolean verify = MD5Util.verify(decrypt, userByQuery.getPassword(), salt, "UTF-8");
-        if (!verify) {
-            log.warn("44401", "密码验证失败",user);
-            throw new ConditionException("44401", "密码验证失败");
-        }
+        User userByQuery = checkPassword(user);
         String token = null;
         try {
             token = TokenUtil.generateToken(userByQuery.getId());
@@ -186,5 +155,90 @@ public class UserService {
         Integer total = userInfoDao.pageCountTotal(jsonObject);
         List<UserInfo> userInfoList = userInfoDao.pageUserInfoList(jsonObject);
         return new PageResult<>(total,page+1,size, userInfoList);
+    }
+
+    public Map<String, Object> loginDts(User user) {
+        User userByQuery = checkPassword(user);
+        String accessToken = null;
+        String refreshToken = null;
+
+        Long queryId = userByQuery.getId();
+        try {
+            accessToken = TokenUtil.generateToken(queryId);
+            refreshToken = TokenUtil.generateRefreshToken(queryId);
+        } catch (Exception e1) {
+            log.error("55500", "生成令牌失败",e1);
+            throw new ConditionException("55500", "生成令牌失败");
+        }
+        RefreshToken refreshTokenEntity = RefreshToken.builder()
+                .refreshToken(refreshToken)
+                .userId(queryId)
+                .createTime(new Date()).build();
+        // 保存refreshToken到数据库
+        userDao.deleteRefreshToken(queryId);
+        userDao.saveRefreshToken(refreshTokenEntity);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("accessToken",accessToken);
+        map.put("refreshToken",refreshToken);
+        return map;
+    }
+
+    private User checkPassword(User user) {
+        String phone = user.getPhone();
+        String email = user.getEmail();
+
+        boolean p = StrUtil.isBlankIfStr(phone);
+        boolean e = StrUtil.isBlankIfStr(email);
+        if (p && e) {
+            log.warn("账号不能为空");
+            throw new ConditionException("44300", "账号不能为空");
+        }
+
+        String password = user.getPassword();
+        String decrypt;
+        try {
+            decrypt = RSAUtil.decrypt(password);
+        } catch (Exception e1) {
+            throw new ConditionException("44400", "密码解密失败");
+        }
+
+        User userByQuery = null;
+        if (p) {
+            userByQuery = getUserByEmail(email);
+        } else if (e) {
+            userByQuery = getUserByPhone(phone);
+        }
+        if (null == userByQuery) {
+            log.warn("33300", "用户不存在");
+            throw new ConditionException("33300", "用户不存在");
+        }
+
+        String salt = userByQuery.getSalt();
+        boolean verify = MD5Util.verify(decrypt, userByQuery.getPassword(), salt, "UTF-8");
+        if (!verify) {
+            log.warn("44401", "密码验证失败", user);
+            throw new ConditionException("44401", "密码验证失败");
+        }
+        return userByQuery;
+    }
+
+    public void loginOut(String refreshToken, Long userId) {
+        userDao.deleteRefreshToken(userId);
+    }
+
+    public String getNewAccessToken(String refreshToken) {
+        RefreshToken refreshTokenEntity = userDao.queryByRefreshToken(refreshToken);
+        if(null == refreshTokenEntity) {
+            throw new ConditionException("556","登录失效,令牌刷新失败");
+        }
+        String token = null;
+        try {
+            token = TokenUtil.generateToken(refreshTokenEntity.getUserId());
+        } catch (Exception e1) {
+            log.error("55500", "生成令牌失败",e1);
+            throw new ConditionException("55500", "生成令牌失败");
+        }
+        return token;
     }
 }

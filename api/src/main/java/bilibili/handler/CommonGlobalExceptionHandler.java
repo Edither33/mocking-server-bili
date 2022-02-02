@@ -23,7 +23,8 @@ public class CommonGlobalExceptionHandler {
     @ResponseStatus
     public JsonResponse<String> commonExceptionHandler(HttpServletRequest request, Exception e){
         String errorMsg = e.getMessage();
-        log.error(request.getRequestURI(), request.getRemoteAddr(), request.getMethod(), e);
+        log.error(request.getMethod(), request.getPathInfo());
+        log.error(request.getRequestURI(), e);
         if(e instanceof ConditionException){
             String errorCode = ((ConditionException)e).getCode();
             return new JsonResponse<>(errorCode, errorMsg);

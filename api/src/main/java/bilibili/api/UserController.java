@@ -17,7 +17,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 @Api("用户操作接口")
 @RestController
@@ -66,8 +68,34 @@ public class UserController {
         return new JsonResponse<>(token);
     }
 
+    @ApiOperation("双令牌用户登录")
+    @PostMapping("/user-dts")
+    public JsonResponse<Map<String, Object>> loginDts(@RequestBody UserRequest userRequest) {
+        User user = new User();
+        BeanUtils.copyProperties(userRequest, user);
+        Map<String, Object> map = userService.loginDts(user);
+        return new JsonResponse<>(map);
+    }
+
+    @ApiOperation("双令牌用户退出登录")
+    @DeleteMapping("/refresh-token")
+    public JsonResponse<String> loginOut(HttpServletRequest request) {
+        String refreshToken = request.getHeader("refreshToken");
+        Long userId = userSupport.getCurrentUserId();
+        userService.loginOut(refreshToken, userId);
+        return JsonResponse.success();
+    }
+
+    @ApiOperation("双令牌, 刷新token")
+    @GetMapping("/access-token")
+    public JsonResponse<String> getNewAccessToken(HttpServletRequest request) {
+        String refreshToken = request.getHeader("refreshToken");
+        String accessToken = userService.getNewAccessToken(refreshToken);
+        return new JsonResponse<>(accessToken);
+    }
+
     @ApiOperation("用户信息更新")
-    @PutMapping("/user-info")
+    @PutMapping("/user-infos")
     public JsonResponse<String> updateUserInfo(@RequestBody UserInfo userInfo) {
         Long userId = userSupport.getCurrentUserId();
         userInfo.setUserId(userId);

@@ -24,7 +24,7 @@ public class TokenUtil {
      */
     public static String generateToken(Long id) throws Exception {
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.SECOND, 30);
+        calendar.add(Calendar.HOUR, 2);
 
         JWT rs256 = JWT.create()
                 .setSigner("RS256"
@@ -60,8 +60,10 @@ public class TokenUtil {
                     .createSigner("RS256"
                             , new KeyPair(RSAUtil.getPublicKey(),RSAUtil.getPrivateKey()));
             JWT jwt = JWTUtil.parseToken(token).setSigner(rs256);
+
             JWTValidator validator = JWTValidator.of(jwt);
             validator.validateDate();
+            validator.validateAlgorithm(rs256);
         }catch (ValidateException e) {
             return true;
         } catch (Exception e){
@@ -92,5 +94,19 @@ public class TokenUtil {
         System.out.println(verifyToken("eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJleHAiOjE2NDM0Mjg0MzksImlzcyI6ImRheSBkYXkgdXAiLCJ1c2VySWQiOiIxIn0.HC6Fu60xV2IaMBevP3fRyX2WwEWMAdv4aZV0-598wlr_vHjni7OOZMMyspjMfGKTVpcDhgEW0rOtjzmUdQYeziAr0mwkvcLRDtnrCBmcOGEjQlDzrHjYCe1ii2w4oJaAfGwN7n1tQbYn0WeuLyWwKLKiiG9BpcX35_FOYLH2JTg"));
         System.out.println(isExpire("eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJleHAiOjE2NDM0Mjg0MzksImlzcyI6ImRheSBkYXkgdXAiLCJ1c2VySWQiOiIxIn0.HC6Fu60xV2IaMBevP3fRyX2WwEWMAdv4aZV0-598wlr_vHjni7OOZMMyspjMfGKTVpcDhgEW0rOtjzmUdQYeziAr0mwkvcLRDtnrCBmcOGEjQlDzrHjYCe1ii2w4oJaAfGwN7n1tQbYn0WeuLyWwKLKiiG9BpcX35_FOYLH2JTg"));
         System.out.println(getJWTInfo(token).getPayload(USERID));
+    }
+
+    public static String generateRefreshToken(Long id) throws Exception {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, 7);
+
+        JWT rs256 = JWT.create()
+                .setSigner("RS256"
+                        , new KeyPair(RSAUtil.getPublicKey(),RSAUtil.getPrivateKey()))
+                .setExpiresAt(calendar.getTime())
+                .setIssuer(ISSUER)
+                .setPayload(USERID, String.valueOf(id));
+
+        return rs256.sign();
     }
 }

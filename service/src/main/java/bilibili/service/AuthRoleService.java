@@ -1,6 +1,7 @@
 package bilibili.service;
 
 import bilibili.dao.AuthRoleDao;
+import bilibili.entity.auth.AuthRole;
 import bilibili.entity.auth.AuthRoleElementOperation;
 import bilibili.entity.auth.AuthRoleMenu;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +28,9 @@ public class AuthRoleService {
 
     public List<AuthRoleMenu> getAuthRoleMenus(Set<Long> roleIdList) {
         return authRoleMenuService.getAuthRoleMenus(roleIdList);
+    }
+
+    public AuthRole getRoleByCodeId(String roleCode) {
+        return authRoleDao.getRoleByCodeId(roleCode);
     }
 }

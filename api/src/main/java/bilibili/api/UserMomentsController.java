@@ -1,5 +1,7 @@
 package bilibili.api;
 
+import bilibili.annotation.ApiRoleLimited;
+import bilibili.constant.UserRoleConstant;
 import bilibili.entity.JsonResponse;
 import bilibili.entity.UserMoments;
 import bilibili.service.UserMomentService;
@@ -24,6 +26,7 @@ public class UserMomentsController {
     private UserMomentService userMomentService;
 
     @ApiOperation("发送动态")
+    @ApiRoleLimited(limitedRoleCodeList = {UserRoleConstant.ROLE_LV0})
     @PostMapping("/user-moments")
     public JsonResponse<String> addMoments(@RequestBody UserMoments moments) {
         Long userId = userSupport.getCurrentUserId();

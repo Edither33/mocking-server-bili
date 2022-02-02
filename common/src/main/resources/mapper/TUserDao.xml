@@ -109,4 +109,18 @@
         delete from mock_bilibili.t_user where id = #{id}
     </delete>
 
+    <!--删除token-->
+    <delete id="deleteRefreshToken">
+        delete from t_refresh_token where userId = #{userId}
+    </delete>
+
+    <insert id="saveRefreshToken" useGeneratedKeys="true" keyProperty="id">
+        insert into t_refresh_token(userId, refreshToken, createTime)
+        value (#{userId},#{refreshToken},#{createTime})
+    </insert>
+
+    <select id="queryByRefreshToken" resultType="bilibili.entity.RefreshToken">
+        select id, refreshToken, userId, createTime
+        from t_refresh_token where refreshToken = #{refreshToken}
+    </select>
 </mapper>

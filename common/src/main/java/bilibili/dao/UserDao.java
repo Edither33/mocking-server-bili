@@ -1,7 +1,9 @@
 package bilibili.dao;
 
+import bilibili.entity.RefreshToken;
 import bilibili.entity.User;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface UserDao {
@@ -14,4 +16,10 @@ public interface UserDao {
     Integer update(User user);
 
     User queryUserByEmail(String email);
+
+    Integer deleteRefreshToken(Long userId);
+
+    Integer saveRefreshToken(RefreshToken refreshToken);
+
+    RefreshToken queryByRefreshToken(String refreshToken);
 }
