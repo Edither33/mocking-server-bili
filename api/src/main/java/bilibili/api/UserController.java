@@ -1,17 +1,23 @@
 package bilibili.api;
 
+import bilibili.constant.UserConstant;
 import bilibili.entity.JsonResponse;
+import bilibili.entity.PageResult;
 import bilibili.entity.User;
 import bilibili.entity.UserInfo;
+import bilibili.service.UserFollowingService;
 import bilibili.service.UserService;
 import bilibili.support.UserSupport;
 import bilibili.util.RSAUtil;
 import bilibili.vo.UserRequest;
+import cn.hutool.json.JSONObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Api("用户操作")
 @RestController
@@ -21,6 +27,9 @@ public class UserController {
 
     @Autowired
     private UserSupport userSupport;
+
+    @Autowired
+    private UserFollowingService userFollowingService;
 
     @ApiOperation("获取RSA密钥")
     @GetMapping("/rsa-pks")
@@ -32,7 +41,7 @@ public class UserController {
     @ApiOperation("获取用户信息")
     @GetMapping("/users")
     public JsonResponse<User> getUserInfo() {
-        Long userId = userSupport.getUserId();
+        Long userId = userSupport.getCurrentUserId();
         User user = userService.getUserInfo(userId);
         user.setPassword(null);
         user.setSalt(null);
@@ -60,18 +69,37 @@ public class UserController {
     @ApiOperation("用户信息更新")
     @PutMapping("/user-info")
     public JsonResponse<String> updateUserInfo(@RequestBody UserInfo userInfo) {
-        Long userId = userSupport.getUserId();
-        userInfo.setUserid(userId);
+        Long userId = userSupport.getCurrentUserId();
+        userInfo.setUserId(userId);
         userService.updateUserInfo(userInfo);
         return JsonResponse.success();
     }
 
     @PutMapping("/users")
     public JsonResponse<String> updateUsers(@RequestBody User user){
-        Long userId = userSupport.getUserId();
+        Long userId = userSupport.getCurrentUserId();
         user.setId(userId);
         userService.updateUser(user);
         return JsonResponse.success();
     }
 
+
+    @ApiOperation("获取分页用户信息")
+    @GetMapping("/user-infos")
+    public JsonResponse<PageResult<UserInfo>> pageListUserInfo(@RequestParam(name = "no") Integer page,
+                                                               @RequestParam(name = "size") Integer pageSize,
+                                                               String nick) {
+        Long userId = userSupport.getCurrentUserId();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.putOnce(UserConstant.PAGE_NO, page);
+        jsonObject.putOnce(UserConstant.PAGE_SIZE, pageSize);
+        jsonObject.putOnce(UserConstant.PAGE_NICK, nick);
+        jsonObject.putOnce(UserConstant.PAGE_USERID, userId);
+        PageResult<UserInfo> res = userService.pageUserInfoList(jsonObject);
+        if(res.getTotal() > 0) {
+            List<UserInfo> checkFollowedList = userFollowingService.checkFollowedList(res.getData(), userId);
+            res.setData(checkFollowedList);
+        }
+        return new JsonResponse<>(res);
+    }
 }

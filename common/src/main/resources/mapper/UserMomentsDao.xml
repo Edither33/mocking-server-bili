@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="bilibili.dao.FollowingGroupDao">
+<mapper namespace="bilibili.dao.UserMomentsDao">
 
-    <resultMap type="bilibili.entity.FollowingGroup" id="TFollowingGroupMap">
+    <resultMap type="bilibili.entity.UserMoments" id="TUserMomentsMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="userId" column="userId" jdbcType="INTEGER"/>
-        <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="type" column="type" jdbcType="VARCHAR"/>
+        <result property="contentId" column="contentId" jdbcType="INTEGER"/>
         <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
         <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <!--查询单个-->
-    <select id="queryById" resultMap="TFollowingGroupMap">
+    <select id="queryById" resultMap="TUserMomentsMap">
         select
-          id, userId, `name`, `type`, createTime, updateTime
-        from mock_bilibili.t_following_group
+          id, userId, type, contentId, createTime, updateTime
+        from mock_bilibili.t_user_moments
         where id = #{id}
     </select>
 
     <!--查询指定行数据-->
-    <select id="queryAllByLimit" resultMap="TFollowingGroupMap">
+    <select id="queryAllByLimit" resultMap="TUserMomentsMap">
         select
-          id, userId, `name`, `type`, createTime, updateTime
-        from mock_bilibili.t_following_group
+          id, userId, type, contentId, createTime, updateTime
+        from mock_bilibili.t_user_moments
         limit #{offset}, #{limit}
     </select>
 
     <!--通过实体作为筛选条件查询-->
-    <select id="queryAll" resultMap="TFollowingGroupMap">
+    <select id="queryAll" resultMap="TUserMomentsMap">
         select
-          id, userId, `name`, `type`, createTime, updateTime
-        from mock_bilibili.t_following_group
+          id, userId, type, contentId, createTime, updateTime
+        from mock_bilibili.t_user_moments
         <where>
             <if test="id != null">
                 and id = #{id}
@@ -39,11 +39,11 @@
             <if test="userid != null">
                 and userId = #{userid}
             </if>
-            <if test="name != null and name != ''">
-                and `name` = #{name}
-            </if>
             <if test="type != null and type != ''">
-                and `type` = #{type}
+                and type = #{type}
+            </if>
+            <if test="contentid != null">
+                and contentId = #{contentid}
             </if>
             <if test="createtime != null">
                 and createTime = #{createtime}
@@ -56,22 +56,22 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into mock_bilibili.t_following_group(userId, `name`, `type`, createTime, updateTime)
-        values (#{userid}, #{name}, #{type}, #{createtime}, #{updatetime})
+        insert into mock_bilibili.t_user_moments(userId, type, contentId, createTime, updateTime)
+        values (#{userid}, #{type}, #{contentid}, #{createtime}, #{updatetime})
     </insert>
 
     <!--通过主键修改数据-->
     <update id="update">
-        update mock_bilibili.t_following_group
+        update mock_bilibili.t_user_moments
         <set>
             <if test="userid != null">
                 userId = #{userid},
             </if>
-            <if test="name != null and name != ''">
-                `name` = #{name},
-            </if>
             <if test="type != null and type != ''">
-                `type` = #{type},
+                type = #{type},
+            </if>
+            <if test="contentid != null">
+                contentId = #{contentid},
             </if>
             <if test="createtime != null">
                 createTime = #{createtime},
@@ -85,21 +85,7 @@
 
     <!--通过主键删除-->
     <delete id="deleteById">
-        delete from mock_bilibili.t_following_group where id = #{id}
+        delete from mock_bilibili.t_user_moments where id = #{id}
     </delete>
-
-    <select id="getByType" resultMap="TFollowingGroupMap">
-        select
-          id, userId, `name`, `type`, createTime, updateTime
-        from mock_bilibili.t_following_group
-        where `type` = #{type}
-    </select>
-
-    <select id="getByUserId" resultMap="TFollowingGroupMap">
-        select
-          id, userId, `name`, `type`, createTime, updateTime
-        from mock_bilibili.t_following_group
-        where `userId` = #{userId} or `type` in('0','1','2')
-    </select>
 
 </mapper>

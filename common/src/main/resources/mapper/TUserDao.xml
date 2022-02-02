@@ -8,8 +8,8 @@
         <result property="email" column="email" jdbcType="VARCHAR"/>
         <result property="password" column="password" jdbcType="VARCHAR"/>
         <result property="salt" column="salt" jdbcType="VARCHAR"/>
-        <result property="createtime" column="createTime" jdbcType="TIMESTAMP"/>
-        <result property="updatetime" column="updateTime" jdbcType="TIMESTAMP"/>
+        <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <!--查询单个-->

@@ -77,7 +77,12 @@ public class TokenUtil {
      * @throws Exception
      */
     public static JWT getJWTInfo(String token) {
-        JWT jwt = JWTUtil.parseToken(token);
+        JWT jwt = null;
+        try {
+            jwt = JWTUtil.parseToken(token);
+        } catch (Exception e) {
+            throw new ConditionException("55502", "非法的token");
+        }
         return jwt;
     }
 

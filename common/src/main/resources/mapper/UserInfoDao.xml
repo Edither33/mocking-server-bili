@@ -4,14 +4,14 @@
 
     <resultMap type="bilibili.entity.UserInfo" id="TUserInfoMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
-        <result property="userid" column="userId" jdbcType="INTEGER"/>
+        <result property="userId" column="userId" jdbcType="INTEGER"/>
         <result property="nick" column="nick" jdbcType="VARCHAR"/>
         <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
         <result property="sign" column="sign" jdbcType="VARCHAR"/>
         <result property="gender" column="gender" jdbcType="VARCHAR"/>
         <result property="birth" column="birth" jdbcType="VARCHAR"/>
-        <result property="createtime" column="createTime" jdbcType="TIMESTAMP"/>
-        <result property="updatetime" column="updateTime" jdbcType="TIMESTAMP"/>
+        <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <!--查询单个-->
@@ -112,5 +112,37 @@
     <delete id="deleteById">
         delete from mock_bilibili.t_user_info where id = #{id}
     </delete>
+
+    <!--根据用户列表获取用户信息-->
+    <select id="getUserInfoByIds" resultMap="TUserInfoMap">
+        select
+          id, userId, nick, avatar, sign, gender, birth, createTime, updateTime
+        from mock_bilibili.t_user_info
+        where userId in
+        <foreach collection="userList" index="index" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="pageCountTotal" resultType="java.lang.Integer" parameterType="java.util.Map">
+        select count(*) from t_user_info
+        <where>
+            <if test="nick == null and nick ==''">
+                and nick like concat('%',#{nick},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="pageUserInfoList" resultMap="TUserInfoMap" parameterType="java.util.Map">
+        select id, userId, nick, avatar, sign, gender, birth, createTime, updateTime
+        from t_user_info
+        <where>
+            <if test="nick == null and nick ==''">
+                and nick like concat('%',#{nick},'%')
+            </if>
+        </where>
+        order by id desc
+        limit #{start}, #{size}
+    </select>
 
 </mapper>

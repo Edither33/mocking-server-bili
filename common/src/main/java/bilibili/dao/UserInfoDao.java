@@ -1,8 +1,11 @@
 package bilibili.dao;
 
 import bilibili.entity.UserInfo;
+import cn.hutool.json.JSONObject;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 用户基本信息表(UserInfo)表数据库访问层
@@ -64,4 +67,15 @@ public interface UserInfoDao {
      */
     int deleteById(Long id);
 
+    /**
+     * 根据用户列表获取用户信息
+     * @param userList 用户列表
+     * @return 用户信息
+     */
+    List<UserInfo> getUserInfoByIds(@Param("userList") Set<Integer> userList);
+
+
+    Integer pageCountTotal(Map<String, Object> jsonObject);
+
+    List<UserInfo> pageUserInfoList(Map<String, Object> jsonObject);
 }

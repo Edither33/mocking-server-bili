@@ -1,5 +1,10 @@
 package bilibili.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.Date;
 import java.io.Serializable;
 
@@ -9,6 +14,10 @@ import java.io.Serializable;
  * @author makejava
  * @since 2022-01-29 14:04:08
  */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserFollowing implements Serializable {
     private static final long serialVersionUID = -14536513662224258L;
     /**
@@ -18,59 +27,20 @@ public class UserFollowing implements Serializable {
     /**
     * 用户id
     */
-    private Long userid;
+    private Long userId;
     /**
     * 关注用户id
     */
-    private Integer followingid;
+    private Integer followingId;
     /**
     * 关注分组id
     */
-    private Integer groupid;
+    private Integer groupId;
     /**
     * 创建时间
     */
-    private Date createtime;
+    private Date createTime;
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getUserid() {
-        return userid;
-    }
-
-    public void setUserid(Long userid) {
-        this.userid = userid;
-    }
-
-    public Integer getFollowingid() {
-        return followingid;
-    }
-
-    public void setFollowingid(Integer followingid) {
-        this.followingid = followingid;
-    }
-
-    public Integer getGroupid() {
-        return groupid;
-    }
-
-    public void setGroupid(Integer groupid) {
-        this.groupid = groupid;
-    }
-
-    public Date getCreatetime() {
-        return createtime;
-    }
-
-    public void setCreatetime(Date createtime) {
-        this.createtime = createtime;
-    }
+    private UserInfo userInfo;
 
 }

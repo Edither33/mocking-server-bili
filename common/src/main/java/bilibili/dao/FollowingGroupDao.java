@@ -62,4 +62,12 @@ public interface FollowingGroupDao {
      */
     int deleteById(Long id);
 
+    /**
+     * 根据type获取分组
+     * @param type 分组
+     * @return 实例对象
+     */
+    FollowingGroup getByType(String type);
+
+    List<FollowingGroup> getByUserId(Long userId);
 }

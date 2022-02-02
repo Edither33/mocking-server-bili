@@ -4,7 +4,10 @@ spring:
   profiles:
     active: dev
 server:
-  port: 8080
+  port: 8989
 mybatis:
   mapper-locations: classpath:mapper/**.xml
   type-aliases-package: bilibili.domain
+rocket:
+  nameserver:
+    addr: 127.0.0.1:9876

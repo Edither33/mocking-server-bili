@@ -62,4 +62,13 @@ public interface UserFollowingDao {
      */
     int deleteById(Long id);
 
+    /**
+     * 根据userId & followedId 删除数据
+     * @param userId 关注人
+     * @param followedId 被关注人
+     * @return 影响行数
+     */
+    int deleteByUserIdAndFollowedUserId(@Param("userId") Long userId, @Param("followedId") Integer followedId);
+
+    List<UserFollowing> getUserFans(Long userId);
 }

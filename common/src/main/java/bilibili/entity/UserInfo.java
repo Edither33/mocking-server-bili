@@ -24,7 +24,7 @@ public class UserInfo implements Serializable {
     /**
     * 用户id
     */
-    private Long userid;
+    private Long userId;
     /**
     * 昵称
     */
@@ -48,11 +48,11 @@ public class UserInfo implements Serializable {
     /**
     * 创建时间
     */
-    private Date createtime;
+    private Date createTime;
     /**
     * 更新时间
     */
-    private Date updatetime;
+    private Date updateTime;
 
-
+    private Boolean followed;
 }

@@ -4,10 +4,10 @@
 
     <resultMap type="bilibili.entity.UserFollowing" id="TUserFollowingMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
-        <result property="userid" column="userId" jdbcType="INTEGER"/>
-        <result property="followingid" column="followingId" jdbcType="INTEGER"/>
-        <result property="groupid" column="groupId" jdbcType="INTEGER"/>
-        <result property="createtime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="userId" column="userId" jdbcType="INTEGER"/>
+        <result property="followingId" column="followingId" jdbcType="INTEGER"/>
+        <result property="groupId" column="groupId" jdbcType="INTEGER"/>
+        <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <!--查询单个-->
@@ -79,6 +79,11 @@
     <!--通过主键删除-->
     <delete id="deleteById">
         delete from mock_bilibili.t_user_following where id = #{id}
+    </delete>
+
+    <delete id="deleteByUserIdAndFollowedUserId">
+        delete from mock_bilibili.t_user_following
+        where userId = #{userId} and followingId = #{followedId}
     </delete>
 
 </mapper>
