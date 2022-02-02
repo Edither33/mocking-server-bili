@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="bilibili.dao.AuthMenuDao">
+
+    <resultMap type="bilibili.entity.auth.AuthMenu" id="TAuthMenuMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="code" column="code" jdbcType="VARCHAR"/>
+        <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TAuthMenuMap">
+        select
+          id, name, code, createTime, updateTime
+        from mock_bilibili.t_auth_menu
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TAuthMenuMap">
+        select
+          id, name, code, createTime, updateTime
+        from mock_bilibili.t_auth_menu
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TAuthMenuMap">
+        select
+          id, name, code, createTime, updateTime
+        from mock_bilibili.t_auth_menu
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="code != null and code != ''">
+                and code = #{code}
+            </if>
+            <if test="createTime != null">
+                and createTime = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and updateTime = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into mock_bilibili.t_auth_menu(name, code, createTime, updateTime)
+        values (#{name}, #{code}, #{createTime}, #{updateTime})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update mock_bilibili.t_auth_menu
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="code != null and code != ''">
+                code = #{code},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                updateTime = #{updateTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from mock_bilibili.t_auth_menu where id = #{id}
+    </delete>
+
+</mapper>

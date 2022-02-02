@@ -63,11 +63,11 @@
             <if test="salt != null and salt != ''">
                 and salt = #{salt}
             </if>
-            <if test="createtime != null">
-                and createTime = #{createtime}
+            <if test="createTime != null">
+                and createTime = #{createTime}
             </if>
-            <if test="updatetime != null">
-                and updateTime = #{updatetime}
+            <if test="updateTime != null">
+                and updateTime = #{updateTime}
             </if>
         </where>
     </select>
@@ -75,7 +75,7 @@
     <!--新增所有列-->
     <insert id="insertUser" keyProperty="id" useGeneratedKeys="true">
         insert into mock_bilibili.t_user(phone, email, password, salt, createTime, updateTime)
-        values (#{phone}, #{email}, #{password}, #{salt}, #{createtime}, #{updatetime})
+        values (#{phone}, #{email}, #{password}, #{salt}, #{createTime}, #{updateTime})
     </insert>
 
     <!--通过主键修改数据-->
@@ -94,11 +94,11 @@
             <if test="salt != null and salt != ''">
                 salt = #{salt},
             </if>
-            <if test="createtime != null">
-                createTime = #{createtime},
+            <if test="createTime != null">
+                createTime = #{createTime},
             </if>
-            <if test="updatetime != null">
-                updateTime = #{updatetime},
+            <if test="updateTime != null">
+                updateTime = #{updateTime},
             </if>
         </set>
         where id = #{id}
