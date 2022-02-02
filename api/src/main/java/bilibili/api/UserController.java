@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api("用户操作")
+@Api("用户操作接口")
 @RestController
 public class UserController {
     @Autowired

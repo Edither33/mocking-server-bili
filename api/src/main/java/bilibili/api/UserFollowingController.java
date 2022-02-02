@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Api("关注操作")
+@Api("关注操作接口")
 @RestController
 public class UserFollowingController {
     @Autowired

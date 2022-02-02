@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Api("用户动态")
+@Api("用户动态操作接口")
 @RestController
 public class UserMomentsController {
     @Autowired

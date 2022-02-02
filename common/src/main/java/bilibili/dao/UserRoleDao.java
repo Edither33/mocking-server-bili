@@ -62,4 +62,5 @@ public interface UserRoleDao {
      */
     int deleteById(Long id);
 
+    List<UserRole> getUserRoleByUserId(Long userId);
 }

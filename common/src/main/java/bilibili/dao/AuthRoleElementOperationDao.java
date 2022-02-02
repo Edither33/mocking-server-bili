@@ -3,6 +3,7 @@ package bilibili.dao;
 import bilibili.entity.auth.AuthRoleElementOperation;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 权限控制--角色与元素操作关联表(AuthRoleElementOperation)表数据库访问层
@@ -62,4 +63,5 @@ public interface AuthRoleElementOperationDao {
      */
     int deleteById(Long id);
 
+    List<AuthRoleElementOperation> getRoleElementOperationsByRoleIds(@Param("roleIdSet") Set<Long> roleIdList);
 }

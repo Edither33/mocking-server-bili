@@ -7,6 +7,11 @@
         <result property="roleId" column="roleId" jdbcType="INTEGER"/>
         <result property="elementOperationId" column="elementOperationId" jdbcType="INTEGER"/>
         <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+        <association property="authElementOperation" javaType="bilibili.entity.auth.AuthElementOperation">
+            <result property="operationType" column="operationType"/>
+            <result property="elementName" column="elementName"/>
+            <result property="elementCode" column="elementCode" />
+        </association>
     </resultMap>
 
     <!--查询单个-->
@@ -74,4 +79,15 @@
         delete from mock_bilibili.t_auth_role_element_operation where id = #{id}
     </delete>
 
+    <select id="getRoleElementOperationsByRoleIds" resultMap="TAuthRoleElementOperationMap">
+        select areo.id, areo.createTime, areo.elementOperationId, areo.roleId,
+        aeo.elementCode, aeo.elementName
+        from t_auth_role_element_operation areo
+        left join t_auth_element_operation aeo
+        on areo.elementOperationId = aeo.id
+        where areo.roleId in
+        <foreach collection="roleIdSet" item="roleId" open="(" close=")" separator=",">
+            #{roleId}
+        </foreach>
+    </select>
 </mapper>

@@ -3,6 +3,7 @@ package bilibili.dao;
 import bilibili.entity.auth.AuthRoleMenu;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 权限控制--角色页面菜单关联表(AuthRoleMenu)表数据库访问层
@@ -62,4 +63,5 @@ public interface AuthRoleMenuDao {
      */
     int deleteById(Long id);
 
+    List<AuthRoleMenu> getAuthRoleMenus(@Param("roleIdSet") Set<Long> roleIdList);
 }

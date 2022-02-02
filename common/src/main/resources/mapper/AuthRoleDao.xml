@@ -81,4 +81,8 @@
         delete from mock_bilibili.t_auth_role where id = #{id}
     </delete>
 
+    <select id="getRoleElementOperationsByRoleIds" resultType="bilibili.entity.auth.AuthRoleElementOperation">
+
+    </select>
+
 </mapper>

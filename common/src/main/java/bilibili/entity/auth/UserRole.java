@@ -35,4 +35,8 @@ public class UserRole implements Serializable {
     */
     private Date createTime;
 
+    private String roleName;
+
+    private String roleCode;
+
 }

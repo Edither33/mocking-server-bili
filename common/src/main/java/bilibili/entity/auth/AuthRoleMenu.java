@@ -37,4 +37,5 @@ public class AuthRoleMenu implements Serializable {
     */
     private Date createTime;
 
+    private AuthMenu authMenu;
 }

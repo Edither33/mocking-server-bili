@@ -7,6 +7,10 @@
         <result property="roleId" column="roleId" jdbcType="INTEGER"/>
         <result property="menuId" column="menuId" jdbcType="INTEGER"/>
         <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+        <association property="authMenu" javaType="bilibili.entity.auth.AuthMenu">
+            <result property="code" column="code"/>
+            <result property="name" column="name"/>
+        </association>
     </resultMap>
 
     <!--查询单个-->
@@ -28,7 +32,7 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="TAuthRoleMenuMap">
         select
-          id, roleId, menuId, createTime
+        id, roleId, menuId, createTime
         from mock_bilibili.t_auth_role_menu
         <where>
             <if test="id != null">
@@ -73,5 +77,17 @@
     <delete id="deleteById">
         delete from mock_bilibili.t_auth_role_menu where id = #{id}
     </delete>
+
+    <select id="getAuthRoleMenus" resultMap="TAuthRoleMenuMap">
+      select
+      tare.id, tare.roleId, tare.createTime, tare.menuId, am.code, am.name
+      from t_auth_role_menu tare
+      left join t_auth_menu am
+      on am.id = tare.menuId
+      where tare.roleId in
+      <foreach collection="roleIdSet" item="roleId" open="(" close=")" separator=",">
+          #{roleId}
+      </foreach>
+    </select>
 
 </mapper>

@@ -7,6 +7,8 @@
         <result property="userId" column="userId" jdbcType="INTEGER"/>
         <result property="roleId" column="roleId" jdbcType="INTEGER"/>
         <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="roleCode" column="roleCode"/>
+        <result property="roleName" column="roleName"/>
     </resultMap>
 
     <!--查询单个-->
@@ -73,5 +75,15 @@
     <delete id="deleteById">
         delete from mock_bilibili.t_user_role where id = #{id}
     </delete>
+
+    <select id="getUserRoleByUserId" resultType="bilibili.entity.auth.UserRole">
+        select
+        ur.id, ur.userId, ur.roleId, ur.createTime,
+        ar.name roleName,
+        ar.code roleCode
+        from t_user_role ur
+        left join t_auth_role ar
+        on ar.id = ur.roleId
+    </select>
 
 </mapper>
